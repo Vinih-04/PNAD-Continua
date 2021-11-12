@@ -1,5 +1,5 @@
-# QUEST�O 2A #
-df_q2$idade*df_q2$idade
+# ESTIMANDO ALGUNS MODELOS #
+
 reg <- lm(lsalarioh ~ idade + idadeqdd + educ, data = df_q2)
 
 reg1 <- lm(lsalarioh ~ idade + idadeqdd + mulher + preta + 
@@ -14,19 +14,18 @@ reg1ppsub <- lm(lsalarioh ~ idade + idadeqdd + mulher + preta +
                parda + servidor + capital + educ + I(educ * mulher) +
                freqescola + I(educ * preta) + I(educ * parda), data = df_q2, subset = (salarioh < 100))
 
-
 reg1a <- lm(lsalarioh ~ idade + idadeqdd + mulher + preta + 
               parda + servidor + capital + freqescola + superiorinc + mediocom +
               medioinc + fundcom + fundinc + semestudo, data = df_q2)
 
 
-# QUEST�O 2B #
+# TESTE DE ESPECIFICAÇÃO #
 
 resettest(reg1, data = df_q2)
 resettest(reg1a, data = df_q2)
 resettest(reg1pp, data = df_q2)
 
-# QUEST�O 2D
+# INSTRUMENTALIZAR EDUCAÇÃO #
 
 reg2 <- ivreg(lsalarioh ~ idade + idadeqdd + mulher + preta + 
               parda + servidor + capital + educ + I(educ * mulher) +
@@ -42,12 +41,12 @@ reg2a <- ivreg(lsalarioh ~ idade + idadeqdd + mulher + preta +
                  I(pessoasdom * mulher) + freqescola + I(filhos * preta)
                + I(pessoasdom * preta) + I(filhos * parda) + I(pessoasdom * parda), data = df_q2)
 
-# QUEST�O 2C e 2E
+# TESTE DE ENDOGENEIDADE E DE RESTRIÇÕES SOBREIDENTIFICADORAS #
 
 summary(reg2, diagnostics = TRUE)
 
 
-# QUEST�O 3A e 3B #
+# ESTIMAÇÃO DE DADOS EM PAINEL E TESTE DE HAUSMAN #
 
 reg3 <- plm(lsalarioh ~ idade + idadeqdd + mulher + preta + 
               parda + servidor + capital + educ + I(educ * mulher) +
@@ -61,7 +60,7 @@ reg4 <- plm(lsalarioh ~ idade + idadeqdd + mulher + preta +
 
 phtest(reg3, reg4)
 
-# QUEST�O 3C #
+# TESTE DE AUTOCORRELAÇÃO DOS RESÍDUOS #
 
 reg4a <- plm(lsalarioh ~ idade + idadeqdd + mulher + preta + 
       parda + servidor + capital + educ + I(educ * mulher) +
@@ -69,7 +68,7 @@ reg4a <- plm(lsalarioh ~ idade + idadeqdd + mulher + preta +
 
 bgtest(reg1)
 
-# QUEST�O 4A #
+# PROBIT #
 
 reg5 <- glm(ocupado ~ casado + nfilhos + ordemdom + idade + idadeqdd + nfilhos7anos +
               educ + preta + parda, data = df_q4, family = binomial(link = 'probit'),
@@ -85,13 +84,13 @@ reg5am <- glm(ocupado ~ casado + nfilhos + nfilhos7anos + ordemdom + idade + ida
               preta + parda, data = df_q4, family = binomial(link = 'probit'))
 
 
-# QUEST�O 4B #
+# EFEITO MARGINAL #
 
 margins(reg5)
 margins(reg5m)
 margins(reg5am)
 
-# QUEST�O 4C #
+# TOBIT #
 
  # df_q4$servidor[is.na(df_q4$servidor)] <- 0 
 
@@ -116,7 +115,7 @@ a + geom_density(aes(y = ..count..), fill = "lightgray") +
 summary(margEff(reg6))
 summary(margEff(reg6a))
 
-# QUEST�O 4D #
+# POISSON PARA NÚMERO DE FILHOS #
 
 reg7 <- glm(nfilhos ~ idade + preta + parda +
               servidor + capital + educ + lsalarioh, family = 'poisson',
@@ -124,7 +123,7 @@ reg7 <- glm(nfilhos ~ idade + preta + parda +
 
 summary(reg7)
 
-# QUEST�O 4E #
+# PROCEDIMENTO DE HECKMAN #
 
 summary(heckit(ocupado ~ casado + ordemdom + idade + idadeqdd + nfilhos7anos +
                   educ + preta, lsalarioh ~ idade + idadeqdd + preta + 
